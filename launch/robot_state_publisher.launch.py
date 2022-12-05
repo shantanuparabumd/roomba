@@ -26,7 +26,7 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    TURTLEBOT3_MODEL = 'burger'
+    TURTLEBOT3_MODEL = 'waffle_pi'
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
     urdf_file_name = 'turtlebot3_' + TURTLEBOT3_MODEL + '.urdf'
@@ -34,7 +34,7 @@ def generate_launch_description():
     print('urdf_file_name : {}'.format(urdf_file_name))
 
     urdf_path = os.path.join(
-        get_package_share_directory('turtlebot3_gazebo'),
+        get_package_share_directory('roomba'),
         'urdf',
         urdf_file_name)
 

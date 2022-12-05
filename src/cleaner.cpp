@@ -30,7 +30,7 @@ class MinimalPublisher : public rclcpp::Node {
   : Node("cleaner"), count_(0) {
     
   // Creating a Publisher
-    publisher_ = this->create_publisher<std_msgs::msg::String>("topic", 10);
+    publisher_ = this->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 10);
     RCLCPP_DEBUG(this->get_logger(), "Publisher is Created");
     timer_ = this->create_wall_timer(100ns, std::bind(&MinimalPublisher::timer_callback, this));
 
@@ -41,9 +41,8 @@ class MinimalPublisher : public rclcpp::Node {
 
  private:
   // Variables
-  std::string Message = "Shantanu";
   rclcpp::TimerBase::SharedPtr timer_;
-  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
+  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_;
   rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr subscription_;
   
   size_t count_;
@@ -55,16 +54,20 @@ class MinimalPublisher : public rclcpp::Node {
   void timer_callback() {
     // C++ stream style
     RCLCPP_INFO_STREAM_ONCE(this->get_logger(), "The Node Has been Setup");
-    auto message = std_msgs::msg::String();
-    message.data = "Hello, " +Message + std::to_string(count_++);
-    RCLCPP_INFO(this->get_logger(), "808X ROS2: '%s'", message.data.c_str());
-    publisher_->publish(message);
+    auto command = geometry_msgs::msg::Twist();
+    command.linear.x=0.0;
+    // RCLCPP_INFO(this->get_logger(), "808X ROS2: '%f'", command.linear.x);
+    // publisher_->publish(command);
     
 
   }
   void topic_callback(const sensor_msgs::msg::LaserScan & msg) const {
-    RCLCPP_INFO(this->get_logger(), "I heard: '%f'", msg.angle_min);
+    if(msg.ranges[0]<1){
+        
+    }
+    RCLCPP_INFO(this->get_logger(), "I heard: '%f'", msg.ranges[0]);
   }
+  
 };
 
 /**

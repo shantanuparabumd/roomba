@@ -23,11 +23,12 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Get the urdf file
-    TURTLEBOT3_MODEL = 'burger'
+    TURTLEBOT3_MODEL = 'waffle_pi'
     model_folder = 'turtlebot3_' + TURTLEBOT3_MODEL
     urdf_path = os.path.join(
         get_package_share_directory('roomba'),
         'models',
+        model_folder,
         'model.sdf'
     )
     wall_path = os.path.join(

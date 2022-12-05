@@ -37,6 +37,7 @@ install(DIRECTORY
   launch
   models
   worlds
+  urdf
   DESTINATION share/${PROJECT_NAME}/
 )
   set(ament_cmake_cpplint_FOUND TRUE)
