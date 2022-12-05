@@ -78,7 +78,7 @@ class RoomBa : public rclcpp::Node {
       }
       else {
         state_ = FORWARD;
-        message.linear.x = 0.4;
+        message.linear.x = 0.2;
         publisher_->publish (message);
         RCLCPP_INFO_STREAM (this->get_logger(), "State = FORWARD");
       }
@@ -86,7 +86,7 @@ class RoomBa : public rclcpp::Node {
     case TURN:
       if (! hasObstacle()) {    // check transition
         state_ = FORWARD;
-        message.linear.x = 0.4;
+        message.linear.x = 0.2;
         publisher_->publish (message);
         RCLCPP_INFO_STREAM (this->get_logger(), "State = FORWARD");
       }
@@ -104,7 +104,7 @@ class RoomBa : public rclcpp::Node {
     RCLCPP_INFO (this->get_logger(),  "floatData[idx] = %.2f",
                     floatData[idx]);
    
-    if (floatData[idx] < 2.0 ) {
+    if (floatData[idx] < 0.5 ) {
       RCLCPP_INFO (this->get_logger(),  "Has Object floatData[idx] = %.2f",
                     floatData[idx]);
       return true;
