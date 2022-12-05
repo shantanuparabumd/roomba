@@ -1,3 +1,13 @@
+/**
+ * @file cleaner2.cpp
+ * @author Shantanu Parab (sparab@umd.edu)
+ * @brief Algorithm to run the robot
+ * @version 0.1
+ * @date 2022-12-05
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
 #include <rclcpp/rclcpp.hpp>
 
 #include <sensor_msgs/msg/image.hpp>
@@ -43,7 +53,10 @@ class RoomBa : public rclcpp::Node {
   void subscribe_callback(const IMAGE& msg) {
     lastImg_ = msg;
   }
-
+  /**
+   * @brief Function to handle timer callback for publisher node
+   * 
+   */
   void process_callback()
   {
     // Do nothing until the first data read
@@ -94,7 +107,12 @@ class RoomBa : public rclcpp::Node {
     }
   }
 
-
+  /**
+   * @brief function to check for obstacles
+   * 
+   * @return true 
+   * @return false 
+   */
   bool hasObstacle () {
     unsigned char *dataPtr = lastImg_.data.data();
     float* floatData = (float*) dataPtr;
@@ -125,7 +143,13 @@ class RoomBa : public rclcpp::Node {
   StateType                              state_;
 };
 
-
+/**
+ * @brief main function entry point
+ * 
+ * @param argc 
+ * @param argv 
+ * @return int 
+ */
 int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
