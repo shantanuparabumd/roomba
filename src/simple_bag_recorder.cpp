@@ -10,7 +10,7 @@
  */
 #include "rclcpp/rclcpp.hpp"
 #include <std_msgs/msg/string.hpp>
-
+#include <geometry_msgs/msg/twist.hpp>
 #include <rosbag2_cpp/writer.hpp>
 
 using std::placeholders::_1;
@@ -23,18 +23,18 @@ class SimpleBagRecorder : public rclcpp::Node {
 
     writer_->open("my_bag");
 
-    subscription_ = create_subscription<std_msgs::msg::String>(
-      "/cmd_vel", 10, std::bind(&SimpleBagRecorder::topic_callback, this, _1));
+    subscription_ = create_subscription<geometry_msgs::msg::Twist>(
+      "cmd_vel", 10, std::bind(&SimpleBagRecorder::topic_callback, this, _1));
   }
 
  private:
   void topic_callback(std::shared_ptr<rclcpp::SerializedMessage> msg) const {
     rclcpp::Time time_stamp = this->now();
 
-    writer_->write(msg, "topic", "std_msgs/msg/String", time_stamp);
+    writer_->write(msg, "cmd_vel", "geometry_msgs/msg/Twist", time_stamp);
   }
 
-  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
+  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr subscription_;
   std::unique_ptr<rosbag2_cpp::Writer> writer_;
 };
 
