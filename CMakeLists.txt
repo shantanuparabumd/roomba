@@ -17,14 +17,14 @@ find_package(rosbag2_cpp REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
-add_executable(cleaner src/cleaner.cpp)
-ament_target_dependencies(cleaner rclcpp std_msgs sensor_msgs geometry_msgs)
 add_executable(roomba_algo src/cleaner2.cpp)
 ament_target_dependencies(roomba_algo rclcpp std_msgs sensor_msgs geometry_msgs)
+add_executable(simple_bag_recorder src/simple_bag_recorder.cpp)
+ament_target_dependencies(simple_bag_recorder rclcpp rosbag2_cpp std_msgs)
 
 install(TARGETS
-  cleaner
   roomba_algo
+  simple_bag_recorder
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)

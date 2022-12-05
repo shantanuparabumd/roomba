@@ -20,9 +20,11 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch_ros.actions import Node
+from launch.actions import IncludeLaunchDescription,DeclareLaunchArgument, ExecuteProcess, TimerAction
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration,PythonExpression
 
 
 def generate_launch_description():
@@ -68,6 +70,33 @@ def generate_launch_description():
             'y_pose': y_pose
         }.items()
     )
+    runner_node = Node(
+        package='roomba',
+        executable='roomba_algo'
+    )
+    ros_bag = LaunchConfiguration('ros_bag')
+
+    ros_bag_arg = DeclareLaunchArgument(
+        'ros_bag',
+        default_value='False'
+    )
+    ros_bag_conditioned = ExecuteProcess(
+        condition=IfCondition(
+            PythonExpression([
+                ros_bag,
+                ' == True'
+            ])
+        ),
+        cmd=[[
+            'ros2 run roomba simple_bag_recorder'
+        ]],
+        shell=True
+    )
+    ta=TimerAction(
+            period=2.0,
+            actions=[ros_bag_conditioned],
+        )
+
 
     ld = LaunchDescription()
 
@@ -76,5 +105,8 @@ def generate_launch_description():
     ld.add_action(gzclient_cmd)
     ld.add_action(robot_state_publisher_cmd)
     ld.add_action(spawn_turtlebot_cmd)
-
+    ld.add_action(runner_node)
+    ld.add_action(ros_bag_arg)
+    ld.add_action(ta)
+    
     return ld
