@@ -19,9 +19,12 @@ find_package(rosbag2_cpp REQUIRED)
 # find_package(<dependency> REQUIRED)
 add_executable(cleaner src/cleaner.cpp)
 ament_target_dependencies(cleaner rclcpp std_msgs sensor_msgs geometry_msgs)
+add_executable(roomba_algo src/cleaner2.cpp)
+ament_target_dependencies(roomba_algo rclcpp std_msgs sensor_msgs geometry_msgs)
 
 install(TARGETS
   cleaner
+  roomba_algo
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
