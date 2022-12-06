@@ -1,4 +1,4 @@
-# Programming Assignment: ROS Publisher/Subscriber
+# Programming Assignment: ROS Gazebo Integration
 ***
 **Subject:** ENPM 808X  
 **Name:** Shantanu Parab  
@@ -9,7 +9,21 @@
 ### System Requirements
 ROS2 Humble Hawksbill
 Follow the installation instructions given in the link  
-[ROS 2 Humble Hawksbill Installation](http://docs.ros.org/en/humble/Installation/Alternatives/Ubuntu-Development-Setup.html)
+[ROS 2 Humble Hawksbill Installation](http://docs.ros.org/en/humble/Installation/Alternatives/Ubuntu-Development-Setup.html)  
+
+Install Gazebo,Turlebot3 and Plugins  
+```bash
+sudo apt install ros-humble-gazebo-ros-pkgs
+sudo apt install ros-humble-turtlebot3*
+sudo apt install ros-humble-gazebo-plugins
+```
+Gazebo Variables setup
+```bash
+export TURTLEBOT3_MODEL=burger
+export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:`ros2 pkg \
+    prefix turtlebot3_gazebo \
+    `/share/turtlebot3_gazebo/models/
+```
 
 ### Instructions to Create workspace and build package
 ```bash
@@ -17,102 +31,48 @@ Follow the installation instructions given in the link
 mkdir -p ~/ros2_ws/src
 cd ~/ros2_ws/src
 #Clone Package
-git clone git@github.com:shantanuparabumd/beginner_tutorials.git
-# cd if you're still in the ``src`` directory with the ``beginner_tutorials`` clone
+git clone https://github.com/shantanuparabumd/roomba.git
+# cd if you're still in the ``src`` directory with the ``roomba`` clone
 cd ~/ros2_ws
 rosdep install -i --from-path src --rosdistro humble -y
 #Source your WS
 . install/local_setup.bash
 #Build Package
-colcon build --packages-select beginner_tutorials
+colcon build --packages-select roomba
 ```
-### Launch File Run
-```bash
-cd ~/ros2_ws/src/beginner_tutorials/launch
-ros2 launch sytem_launch.yaml frequency:=20.0
-```  
-Change the frequency parameter to change the frequency default is set to 2.0  
+
 
 ### Instruction to run nodes
 Open a new terminal to run publisher node
 ```bash
 cd ~/ros2_ws
 . install/local_setup.bash
-ros2 run beginner_tutorials talker
-```
-Open a new terminal to run subscriber node
-```bash
-cd ~/ros2_ws
-. install/local_setup.bash
-ros2 run beginner_tutorials listener
+ros2 run roomba roomba_algo
 ```
 
-Open a new terminal to run server node
-```bash
-cd ~/ros2_ws
-. install/local_setup.bash
-ros2 run beginner_tutorials server
-```
-
-### Parameter Setting
-```bash
-ros2 param set \minimal_publisher freq 2.0
-```
-
-### RQT
-**LOGGER INFO**
-![Logger Info](results/RQT_LOG.png)
-
-**RQT GRAPH**
-![RQT GRAPH](results/RQT_GRAPH.png)
-***
-## Week 11
-### TF 
-In One Terminal Run
-```bash
-ros2 run beginner_tutorials talker
-```
-In Second Terminal Run 
-```bash
-ros2 run beginner_tutorials server
-```
-In another terminal run 
-```bash
-ros2 run tf2_ros tf2_echo world dummy
-```
-### TF Results
-[Frames PDF](results/frames_2022-11-30_14.25.31.pdf)   
 ### Ros Bag Launch
 Note: Make sure you delete the existing my_bag folder
 ```bash
-cd ~/ros2_ws/src/beginner_tutorials/bag_recordings
+cd ~/ros2_ws/src/roomba
 # Run the bellow command to run along with the bag file
-ros2 launch beginner_tutorials system_bag_launch.py ros_bag:='True'
+ros2 launch roomba system.py ros_bag:='True'
 # Run the bellow command to run along without the bag file
-ros2 launch beginner_tutorials system_bag_launch.py
+ros2 launch roomba system.py
 ```
 **Check the rosbag output**
 ```bash
 #Run in One terminal
-ros2 run beginner_tutorials listener
+ros2 launch roomba gazebo_launch.py
 #Run in Another terminal
-cd ~/ros2_ws/src/beginner_tutorials/bag_recordings
+cd ~/ros2_ws/src/roomba
 ros2 bag play my_bag
 ```
 Note: The rosbag is created in the directory where the launch file is executed from.  
 The rosbag play command should be played in the same directory.
 
-### Testing  
-**Build Testing**  
+### CPP Check and CPP Lint
 ```bash
-colcon test --packages-select beginner_tutorials
-```
-**Verbose Output**  
-```bash
-colcon test --event-handlers console_direct+ --packages-select beginner_tutorials
-```
-**Return Status**  
-```bash
-colcon test-result --test-result-base build/beginner_tutorials
-echo $?
+cd ~/ros2_ws/src/roomba
+bash cppcheck.sh
+bash cpplint.sh
 ```
