@@ -110,7 +110,7 @@ class RoomBa : public rclcpp::Node {
    */
   bool hasObstacle() {
     unsigned char *dataPtr = lastImg_.data.data();
-    float* floatData = float*(dataPtr);
+    float* floatData = (float*)dataPtr;
     int idx;
     idx = ((lastImg_.height -40)/2 * lastImg_.width) + lastImg_.width/2;
     RCLCPP_INFO(this->get_logger(),  "floatData[idx] = %.2f",
